@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>To-Do List</title>
+
+  <style>
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        font-family: Montserrat, sans-serif;
+      }
+
+      body {
+        padding: 20px;
+      }
+
+      header {
+        background: lightblue;
+        padding: 10px 20px;
+      }
+
+      main {
+        background: lightcoral;
+        padding: 20px;
+      }
+
+      input {
+        padding: 10px;
+        font-size: 15px;
+        border: 1px solid black;
+      }
+
+      button {
+        padding: 10px;
+        font-size: 15px;
+        border: 1px solid black;
+        background: white;
+        cursor: pointer;
+      }
+
+      #add-task-button {
+        background: lightgreen;
+      }
+
+      #delete-btn {
+        background: rgb(255, 143, 143);
+      }
+
+      #task-form {
+        display: grid;
+        grid-template-columns: 2fr 1fr 0.8fr;
+        gap: 10px;
+      }
+
+      #task-list  li{
+        list-style: none;
+        display: grid;
+        grid-template-columns: 2fr 1fr 0.8fr;
+        gap: 10px;
+        margin: 10px 0;
+      }
+    </style>
+</head>
+
+<body>
+  <header>
+    <h1>To-Do List</h1>
+  </header>
+
+  <main>
+    <form id="task-form">
+      <input type="text" id="task-name" placeholder="Enter a task here" required>
+      <input type="date" id="task-date" required>
+      <button type="submit" id="add-task-button">Add Task</button>
+    </form>
+
+    <div id="task-container">
+      <ul id="task-list"></ul>
+    </div>
+  </main>
+
+  <script>
+    const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    const taskName = document.getElementById('task-name');
+    const taskDate = document.getElementById('task-date');
+    const taskForm = document.getElementById('task-form');
+    const taskList = document.getElementById('task-list');
+    const deleteBtn = document.getElementById('delete-btn');
+
+    renderTasks();
+
+    taskForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const taskValue = taskName.value.trim();
+      const dateValue = taskDate.value;
+      tasks.push({ name: taskValue, date: dateValue });
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+      renderTasks();
+      taskName.value = '';
+      taskDate.value = '';
+    });
+
+    function renderTasks() {
+      taskList.innerHTML = '';
+
+      for (let i = 0; i < tasks.length; i++) {
+        const li = document.createElement('li');
+        li.innerHTML = `
+        <p>${tasks[i].name}</p>
+        <p>${tasks[i].date}</p>
+        <button id="delete-btn" onclick="deleteTask(${i})">Delete</button>
+        `;
+        taskList.appendChild(li);
+      }
+
+      console.log(tasks);
+    }
+
+    function deleteTask(index) {
+      tasks.splice(index, 1);
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+      renderTasks();
+    }
+  </script>
+</body>
+
+</html>
