@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Auto Play</title>
+</head>
+
+<body>
+  <header>
+    <h1>Auto Play</h1>
+    <a href="index.html"><button>Back</button></a>
+  </header>
+  
+  <main>
+    <p>Auto Play is a feature where the game plays automatically without user input.</p>
+    <button id="start-autoplay-btn">Start Auto Play</button>
+    <button id="reset-btn">Reset Score</button>
+    <div id="result"></div>
+  </main>
+  
+  <script>
+    const choices = ["Rock", "Paper", "Scissors"];
+    const score = JSON.parse(localStorage.getItem("score")) || {
+      player1: 0,
+      player2: 0,
+      ties: 0
+    };
+    let isPlaying = false;
+    let intervalId;
+    const resultDiv = document.getElementById("result");
+
+    render("", "", "Welcome to Auto Play! Click the button to start the game.");
+
+    const startAutoPlayBtn = document.getElementById("start-autoplay-btn");
+    startAutoPlayBtn.addEventListener("click", () => {
+      autoPlay();
+    });
+
+    const resetBtn = document.getElementById("reset-btn");
+    resetBtn.addEventListener("click", () => {
+      resetScore();
+    })
+
+
+
+
+    // All the functions below.
+    function playGame() {
+      const player1 = choices[Math.floor(Math.random() * choices.length)];
+      const player2 = choices[Math.floor(Math.random() * choices.length)];
+      let result = "";
+
+      if (player1 === player2) {
+        result = "It's a tie!";
+        score.ties++;
+      } else if (
+        (player1 === "Rock" && player2 === "Scissors") ||
+        (player1 === "Paper" && player2 === "Rock") ||
+        (player1 === "Scissors" && player2 === "Paper")
+      ) {
+        result = "Player 1 wins!";
+        score.player1++;
+      } else {
+        result = "Player 2 wins!";
+        score.player2++;
+      }
+
+      localStorage.setItem("score", JSON.stringify(score));
+      render(player1, player2, result);
+    }
+
+    function autoPlay() {
+
+      if (!isPlaying) {
+        isPlaying = true;
+        startAutoPlayBtn.textContent = "Stop Auto Play";
+        intervalId = setInterval(playGame, 1000);
+      } else {
+        isPlaying = false;
+        startAutoPlayBtn.textContent = "Start Auto Play";
+        clearInterval(intervalId);
+      }
+
+    }
+
+    function render(player1, player2, result) {
+      resultDiv.innerHTML = `
+        <p>Player 1: ${player1}</p>
+        <p>Player 2: ${player2}</p>
+        <p>Result: ${result}</p>
+        <p>Player 1 Wins: ${score.player1}, Player 2 Wins: ${score.player2}, Ties: ${score.ties}</p>
+      `;
+    }
+
+    function resetScore() {
+      localStorage.removeItem("score");
+      score.player1 = 0;
+      score.player2 = 0;
+      score.ties = 0;
+
+      if (isPlaying) {
+        isPlaying = false;
+        startAutoPlayBtn.textContent = "Start Auto Play";
+        clearInterval(intervalId);
+      }
+      render("", "", "Score reset! Click the button to start Auto Play again.");
+    }
+  </script>
+</body>
+
+</html>

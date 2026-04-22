@@ -24,7 +24,7 @@
       }
 
       main {
-        background: lightcoral;
+        background: rgb(46, 200, 211);
         padding: 20px;
       }
 
@@ -46,20 +46,20 @@
         background: lightgreen;
       }
 
-      #delete-btn {
+      .delete-btn {
         background: rgb(255, 143, 143);
       }
 
       #task-form {
         display: grid;
-        grid-template-columns: 2fr 1fr 0.8fr;
+        grid-template-columns: 2fr 1fr 0.6fr;
         gap: 10px;
       }
 
       #task-list  li{
         list-style: none;
         display: grid;
-        grid-template-columns: 2fr 1fr 0.8fr;
+        grid-template-columns: 2fr 1fr 0.6fr;
         gap: 10px;
         margin: 10px 0;
       }
@@ -72,11 +72,12 @@
   </header>
 
   <main>
-    <form id="task-form">
+
+    <div id="task-form">
       <input type="text" id="task-name" placeholder="Enter a task here" required>
       <input type="date" id="task-date" required>
-      <button type="submit" id="add-task-button">Add Task</button>
-    </form>
+      <button id="add-task-button">Add Task</button>
+    </div>
 
     <div id="task-container">
       <ul id="task-list"></ul>
@@ -85,40 +86,51 @@
 
   <script>
     const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
     const taskName = document.getElementById('task-name');
     const taskDate = document.getElementById('task-date');
-    const taskForm = document.getElementById('task-form');
     const taskList = document.getElementById('task-list');
-    const deleteBtn = document.getElementById('delete-btn');
+    
+    const addBtn = document.getElementById('add-task-button');
 
     renderTasks();
 
-    taskForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      const taskValue = taskName.value.trim();
-      const dateValue = taskDate.value;
-      tasks.push({ name: taskValue, date: dateValue });
-      localStorage.setItem('tasks', JSON.stringify(tasks));
+    addBtn.addEventListener('click', () => {
+      addTask();
       renderTasks();
-      taskName.value = '';
-      taskDate.value = '';
     });
+
+    function addTask() {
+      const taskValue = taskName.value;
+      const dateValue = taskDate.value;
+
+      if (taskValue && dateValue) {
+        tasks.push({name: taskValue, date: dateValue});
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        taskName.value = '';
+        taskDate.value = '';
+      } else {
+        alert('Please enter both task name and date.');
+      }
+    }
 
     function renderTasks() {
       taskList.innerHTML = '';
 
-      for (let i = 0; i < tasks.length; i++) {
+      tasks.forEach((task, index) => {
         const li = document.createElement('li');
         li.innerHTML = `
-        <p>${tasks[i].name}</p>
-        <p>${tasks[i].date}</p>
-        <button id="delete-btn" onclick="deleteTask(${i})">Delete</button>
+        <p>${task.name}</p>
+        <p>${task.date}</p>
+        <button class="delete-btn">Delete</button>
         `;
         taskList.appendChild(li);
-      }
 
-      console.log(tasks);
+        const deleteBtn = li.querySelector('.delete-btn');
+        deleteBtn.addEventListener('click', () => {
+          deleteTask(index);
+        })
+      });
     }
 
     function deleteTask(index) {

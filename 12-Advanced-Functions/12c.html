@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Document</title>
+</head>
+<body>
+  <!-- Create the button below. When clicking the button, after 1 second the text inside the button changes to 'Finished!'.
+   
+  (Hint: use setTimeout() and the DOM)-->
+
+  <!-- Continuing from exercise 12c, modify the button so that when we click it, the text immediately changes to 'Loading...', and then after 1 second, it changes to 'Finished!'. -->
+
+  <!-- Create the 'Add to cart' button below. When clicking this button, display the message 'Added' below the button. Then, after 2 seconds, remove the message. -->
+
+  <!-- Continuing from 12e, if we click the button, wait 1 to 1.5 seconds, and then click the button again, notice that the second time, the message disappears very quickly (because the first setTimeout is still running and will make the message disappear very soon).
+   
+  Modify the code so when we click the button, it "refreshes" the 2 second wait time (waits for 2 seconds again and removes message).
+  
+  Hint: you can cancel the previous setTimeout using clearTimeout() 
+  
+  and add a small transition to the message when the button is clicked, so that when the message appears, it fades in, and when it disappears, it fades our.
+  -->
+
+  <button id="start-button">Start</button>
+  <br>
+  <button id="add-to-cart-button">Add to Cart</button>
+  <p id="message"></p>
+
+  <script>
+    const startButton = document.getElementById('start-button');
+    const addToCartButton = document.getElementById('add-to-cart-button');
+    const message = document.getElementById('message');
+    
+    startButton.addEventListener('click', () => {
+      doTheWork();
+    });
+
+    addToCartButton.addEventListener('click', () => {
+      addToCart();
+    });
+
+    let timeoutId;
+    function addToCart() {
+      message.textContent = 'Added';
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout( () => {
+        message.textContent = '';
+      }, 2000 );
+    }
+
+    function doTheWork() {
+      startButton.textContent = 'Loading...';
+      setTimeout( () => {
+        startButton.textContent = 'Finished!';
+      }, 1000 );
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Play With Computer</title>
+</head>
+
+<body>
+  <header>
+    <h1>Play With Computer</h1>
+    <a href="index.html"><button>Back</button></a>
+  </header>
+
+  <main>
+    <p>Choose your move:</p>
+    <button class="choose">Rock</button>
+    <button class="choose">Paper</button>
+    <button class="choose">Scissors</button>
+    <div id="result-div"></div>
+    <button id="reset-score-btn">Reset Score</button>
+  </main>
+
+  <script>
+    const choices = ["Rock", "Paper", "Scissors"];
+    const score = JSON.parse(localStorage.getItem("score")) || {
+      user: 0,
+      computer: 0,
+      ties: 0
+    }
+
+    renderResult("", "", "Welcome to Rock, Paper, Scissors! Make your choice.");
+
+    const chooseBtns = document.querySelectorAll(".choose");
+    chooseBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        playGame(btn.textContent);
+      });
+    });
+
+    const resetScoreBtn = document.querySelector("#reset-score-btn");
+    resetScoreBtn.addEventListener("click", () => {
+      resetScore();
+    })
+
+    document.body.addEventListener("keydown", (e) => {
+      if (e.key === "r" || e.key === "R") {
+        playGame("Rock");
+      } else if (e.key === "p" || e.key === "P") {
+        playGame("Paper");
+      } else if (e.key === "s" || e.key === "S") {
+        playGame("Scissors");
+      } else if (e.key === "x" || e.key === "X") {
+        resetScore();
+      }
+    })
+
+
+
+
+    // All the functions below
+    function playGame(userChoice) {
+      const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+      let result = "";
+      if (userChoice === computerChoice) {
+        result = "It's a tie!";
+        score.ties++;
+      } else if ((userChoice === "Rock" && computerChoice === "Scissors") || (userChoice === "Paper" && computerChoice === "Rock") || (userChoice === "Scissors" && computerChoice === "Paper")) {
+        result = "You win!";
+        score.user++;
+      } else {
+        result = "Computer wins!";
+        score.computer++;
+      }
+
+      localStorage.setItem("score", JSON.stringify(score));
+      renderResult(userChoice, computerChoice, result);
+    }
+
+    function renderResult(choice1, choice2, result) {
+      const resultDiv = document.querySelector("#result-div");
+      resultDiv.innerHTML = `
+        <p>You chose: ${choice1}</p>
+        <p>Computer chose: ${choice2}</p>
+        <p>Result: ${result}</p>
+        <p>Score - You: ${score.user}, Computer: ${score.computer}, Ties: ${score.ties}</p>
+      `;
+    }
+
+    function resetScore() {
+      localStorage.removeItem("score");
+      score.user = 0;
+      score.computer = 0;
+      score.ties = 0;
+      renderResult("", "", "Score reset!");
+    }
+
+  </script>
+</body>
+
+</html>

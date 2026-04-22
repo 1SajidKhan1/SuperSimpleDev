@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head></head>
+
+<body>
+  <!-- Imagine we're creating a messaging app. Use setInterval() and document.title to create the feature on the right (the title changes every 1 second). -->
+
+  <script>
+    const messages = [
+      "You have 1 new message",
+      "You have 2 new messages",
+      "You have 3 new messages",
+      "You have 4 new messages",
+      "You have 5 new messages"
+    ];
+
+    let index = 0;
+
+    setInterval( () => {
+      document.title = messages[index];
+
+      // index++;
+
+      // if (index >= messages.length) {
+      //   index = 0;
+      // }
+
+      index = (index + 1) % messages.length;
+    }, 1000 );
+  </script>
+</body>
+
+</html>

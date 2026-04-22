@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+</head>
+
+<body>
+  <!-- 
+  
+  Continuing from 12g, instead of displaying "(2) New messages" every time, save the number of messages in a variable: let messages = 2;
+   
+  -> Use the number in the variable to determine what title to display.
+  
+  -> Create 2 buttons 'Add' / 'Remove' that increase / decrease the 'messages' variable by 1
+  
+  -->
+
+  <!-- 
+  
+  Continuing from 12h:
+
+  -> Don't let 'messages' go below 0.
+  -> If messages === 0, stop changing the title and display 'App' as the title.
+  -> When messages > 0, display the number of messages in the title as before.
+
+  -->
+
+  <button id="add-btn">Add</button>
+  <button id="remove-btn">Remove</button>
+
+  <script>
+    let messages = 2;
+    const addBtn = document.querySelector('#add-btn');
+    const removeBtn = document.querySelector('#remove-btn');
+
+    updateTitle();
+
+    addBtn.addEventListener('click', () => {
+      messages++;
+      updateTitle();
+    });
+
+    removeBtn.addEventListener('click', () => {
+      if (messages > 0) {
+        messages--;
+      }
+      updateTitle();
+    })
+
+    function updateTitle() {
+      if (messages > 0) {
+        document.title = `(${messages}) New messages`;
+      } else {
+        document.title = 'App';
+      }
+    }
+
+  </script>
+</body>
+
+</html>
